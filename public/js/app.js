@@ -1970,13 +1970,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['currentUser'],
   data: function data() {
     return {
       services: "",
       selected: "",
       selectedObj: null,
-      isShow: false
+      isShow: false,
+      loggedInUser: this.currentUser
     };
   },
   methods: {
@@ -1985,6 +2000,14 @@ __webpack_require__.r(__webpack_exports__);
       this.selectedObj = this.services.data[this.selected];
       this.selectedObj ? this.isShow = true : this.isShow = false;
       this.fetchData();
+    },
+    storeFavorite: function storeFavorite() {
+      axios.post("api/favorites", {
+        name: this.selected,
+        data: this.selectedObj,
+        user_id: this.loggedInUser.id,
+        timestamp: this.services.data.timestamp
+      });
     },
     fetchData: function fetchData() {
       var _this = this;
@@ -37601,64 +37624,93 @@ var render = function() {
       _c("div", { staticClass: "col-md-8" }, [
         _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header" }, [
-            _vm._v("MTA Transmit Status")
+            _vm._v("MTA Transit Status")
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.selected,
-                    expression: "selected"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { placeholder: "select one" },
-                on: {
-                  change: [
-                    function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.selected = $event.target.multiple
-                        ? $$selectedVal
-                        : $$selectedVal[0]
-                    },
-                    function($event) {
-                      return _vm.onChange()
-                    }
-                  ]
-                }
-              },
-              [
+            _c("form", { staticClass: "form-inline" }, [
+              _c("div", { staticClass: "input-group mb-2 mr-sm-2" }, [
                 _c(
-                  "option",
-                  { attrs: { value: "", disabled: "", selected: "" } },
-                  [_vm._v("Select one")]
-                ),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "BT" } }, [_vm._v("BT")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "LIRR" } }, [_vm._v("LIRR")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "MetroNorth" } }, [
-                  _vm._v("MetroNorth")
-                ]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "bus" } }, [_vm._v("Bus")]),
-                _vm._v(" "),
-                _c("option", { attrs: { value: "subway" } }, [_vm._v("Subway")])
-              ]
-            ),
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.selected,
+                        expression: "selected"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: { placeholder: "select one" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.selected = $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        },
+                        function($event) {
+                          return _vm.onChange()
+                        }
+                      ]
+                    }
+                  },
+                  [
+                    _c(
+                      "option",
+                      { attrs: { value: "", disabled: "", selected: "" } },
+                      [_vm._v("Select Service Type")]
+                    ),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "BT" } }, [_vm._v("BT")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "LIRR" } }, [
+                      _vm._v("LIRR")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "MetroNorth" } }, [
+                      _vm._v("MetroNorth")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "bus" } }, [_vm._v("Bus")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "subway" } }, [
+                      _vm._v("Subway")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm.selectedObj
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary mb-2",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.storeFavorite()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Add as favorite\n                        "
+                      )
+                    ]
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
             _c("br"),
             _c("br"),
             _vm._v(" "),

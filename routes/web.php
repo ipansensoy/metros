@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home')->middleware('auth');
+Route::get('/favorites', function () {
+    return view('favorite');
+})->name('favorites')->middleware('auth');
