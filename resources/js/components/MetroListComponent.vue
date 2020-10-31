@@ -103,8 +103,8 @@ export default {
             this.button.disable = false;
             this.fetchData();
         },
-        storeFavorite() {
-            axios
+        async storeFavorite() {
+            await axios
                 .post("api/favorites", {
                     name: this.selected,
                     data: this.selectedObj,
@@ -119,8 +119,9 @@ export default {
                     }
                 });
         },
-        fetchData() {
-            axios
+        async fetchData() {
+
+           await axios
                 .get("api/metro-list")
                 .then(response => (this.services = response));
         }
