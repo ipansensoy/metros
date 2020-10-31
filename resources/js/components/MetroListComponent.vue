@@ -1,8 +1,8 @@
 <template>
     <div class="container">
-
         <div class="row justify-content-center">
             <div class="col-md-8">
+                <flash message=""></flash>
                 <div class="card">
                     <div class="card-header">MTA Transit Status</div>
                     <div class="card-body">
@@ -27,8 +27,14 @@
                                 </select>
                             </div>
 
-                            <button v-if="selectedObj" type="button" @click="storeFavorite()" class="btn btn-primary mb-2">
-                                Add as favorite
+                            <button
+                                v-if="selectedObj"
+                                type="button"
+                                @click="storeFavorite()"
+                                v-bind:disabled="button.disable"
+                                class="btn btn-primary mb-2"
+                            >
+                                {{ button.text }}
                             </button>
                         </form>
                         <br /><br />
@@ -75,14 +81,18 @@
 
 <script>
 export default {
-    props: ['currentUser'],
+    props: ["currentUser"],
     data() {
         return {
             services: "",
             selected: "",
             selectedObj: null,
             isShow: false,
-            loggedInUser:this.currentUser
+            loggedInUser: this.currentUser,
+            button: {
+                text: 'Add to your favorite',
+                disable:false
+            },
         };
     },
     methods: {
@@ -90,17 +100,24 @@ export default {
             console.log("The new value is: ", this.selected);
             this.selectedObj = this.services.data[this.selected];
             this.selectedObj ? (this.isShow = true) : (this.isShow = false);
+            this.button.disable = false;
             this.fetchData();
         },
-        storeFavorite(){
+        storeFavorite() {
             axios
-                .post("api/favorites",{
+                .post("api/favorites", {
                     name: this.selected,
                     data: this.selectedObj,
                     user_id: this.loggedInUser.id,
-                    timestamp:this.services.data.timestamp
-
+                    timestamp: this.services.data.timestamp
                 })
+                .then(response => {
+                    if (response.status == 201) {
+                        flash("Added to your favorite list sucessfully.", "success");
+                        this.button.disable = true;
+                        this.button.text = "Added to your favorite"
+                    }
+                });
         },
         fetchData() {
             axios
