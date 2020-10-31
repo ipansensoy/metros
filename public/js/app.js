@@ -2170,6 +2170,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["currentUser"],
   data: function data() {
@@ -2178,6 +2179,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       selected: "",
       selectedObj: null,
       isShow: false,
+      disableSelection: true,
       loggedInUser: this.currentUser,
       button: {
         text: 'Add to your favorite',
@@ -2233,7 +2235,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios.get("api/metro-list").then(function (response) {
-                  return _this2.services = response;
+                  _this2.services = response;
+                  _this2.disableSelection = false;
                 });
 
               case 2:
@@ -38762,7 +38765,10 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
-                      attrs: { placeholder: "select one" },
+                      attrs: {
+                        placeholder: "select one",
+                        disabled: _vm.disableSelection
+                      },
                       on: {
                         change: [
                           function($event) {

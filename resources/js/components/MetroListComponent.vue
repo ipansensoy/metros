@@ -12,6 +12,7 @@
                                     placeholder="select one"
                                     v-model="selected"
                                     @change="onChange()"
+                                    v-bind:disabled="disableSelection"
                                     class="form-control"
                                 >
                                     <option value="" disabled selected
@@ -88,6 +89,7 @@ export default {
             selected: "",
             selectedObj: null,
             isShow: false,
+            disableSelection:true,
             loggedInUser: this.currentUser,
             button: {
                 text: 'Add to your favorite',
@@ -123,7 +125,11 @@ export default {
 
            await axios
                 .get("api/metro-list")
-                .then(response => (this.services = response));
+                .then(response => {
+                    this.services = response;
+                    this.disableSelection = false;
+
+                });
         }
     },
     filters: {
